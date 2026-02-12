@@ -1,0 +1,21 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# C++ Build Artifacts
+*.exe
+*.o
+*.out
+*.dll
+*.obj
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE settings (Optional)
+.vscode/
+.idea/

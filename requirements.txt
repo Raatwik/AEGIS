@@ -1,0 +1,7 @@
+flask
+watchdog
+psutil
+pandas
+scikit-learn
+numpy
+groq

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS DEFENSE | SOC</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">🛡️ AEGIS <span style="font-weight:300; color:#fff;">SYSTEMS</span></div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-left: 20px;">
+                
+            </div>
+            <div class="status-text">
+                <span style="color:var(--neon-green)">●</span> LIVE MONITORING | PORT: 5000
+            </div>
+        </header>
+
+        <div class="status-container">
+            <div id="status-ring" class="status-ring secure">
+                <h1 id="status-text">SECURE</h1>
+                <p id="sub-status">SYSTEM INTEGRITY 100%</p>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Disk I/O Intensity</h3>
+                <div class="number" id="io-rate">0</div>
+                <div style="font-size:0.8rem; opacity:0.5; margin-bottom:5px;">OPS / SEC</div>
+                <div class="bar-bg"><div id="io-bar" class="bar-fill"></div></div>
+            </div>
+
+            <div class="metric-card">
+                <h3>Shannon Entropy</h3>
+                <div class="number" id="entropy-val">0.00</div>
+                <div style="font-size:0.8rem; opacity:0.5; margin-bottom:5px;">BIT RANDOMNESS</div>
+                <div class="bar-bg"><div id="ent-bar" class="bar-fill"></div></div>
+            </div>
+            
+            <div class="metric-card">
+                <h3>Threat Probability</h3>
+                <div class="number" id="ai-conf">0%</div>
+                <div style="font-size:0.8rem; opacity:0.5; margin-bottom:5px;">NEURAL CONFIDENCE</div>
+                <div class="bar-bg"><div id="ai-bar" class="bar-fill"></div></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <div class="metric-card" style="width: 100%; box-sizing: border-box; border-left: 4px solid var(--neon-red); background: rgba(20, 0, 0, 0.6); display: flex; flex-direction: column; justify-content: center;">
+                <h3 style="color: #888; font-size: 0.7rem; margin-bottom: 5px; letter-spacing: 1px;">📍 THREAT ORIGIN</h3>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-size: 1.5rem;">🧠</span>
+                    <div style="overflow: hidden; width: 100%;">
+                        <div id="malware-path" style="font-family: var(--font-mono); font-size: 0.9rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr; text-align: left;">
+                            SYSTEM CLEAN
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span id="malware-pid" style="font-size: 0.8rem; color: var(--neon-green);">PID: ---</span>
+                            <span id="ai-reason" style="font-size: 0.8rem; color: var(--neon-cyan); font-style: italic;">WAITING FOR NEURAL NET</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="score-panel" style="padding: 20px; margin-top: 20px;">
+            <h3 style="margin-top:0; color: var(--neon-green); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom:10px; display:flex; justify-content:space-between;">
+                <span>🧠 NEURAL NET DIAGNOSTICS</span>
+                <span style="font-size:0.8rem; opacity:0.7;">MODEL: LLAMA-3.3</span>
+            </h3>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div style="text-align: center;">
+                    <div style="color: #666; font-size: 0.7rem; letter-spacing:1px;">HEURISTICS</div>
+                    <div id="score-heuristics" class="score-value" style="color: var(--neon-green); font-weight: bold; font-size: 1.5rem; font-family:var(--font-mono);">10</div>
+                </div>
+                <div style="text-align: center; border-left:1px solid rgba(255,255,255,0.1); border-right:1px solid rgba(255,255,255,0.1); padding: 0 40px;">
+                    <div style="color: #666; font-size: 0.7rem; letter-spacing:1px;">ENTROPY</div>
+                    <div id="score-entropy" class="score-value" style="color: var(--neon-green); font-weight: bold; font-size: 1.5rem; font-family:var(--font-mono);">0</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: #666; font-size: 0.7rem; letter-spacing:1px;">BEHAVIOR</div>
+                    <div id="score-behavior" class="score-value" style="color: var(--neon-green); font-weight: bold; font-size: 1.5rem; font-family:var(--font-mono);">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="cyber-btn danger-btn" id="eliminate-btn" onclick="eliminateThreat()" style="display: none;">
+                ☠️ ELIMINATE THREAT
+            </button>
+            <button class="cyber-btn report-btn" id="report-btn" onclick="generateReport()" style="display: none;">
+                📄 GENERATE FORENSICS
+            </button>
+            <button class="cyber-btn" onclick="resetSystem()" style="opacity: 0.5; font-size: 0.7rem;">SYSTEM RESET</button>
+        </div>
+    </div>
+
+    <div id="report-modal" class="modal" style="display:none; position:fixed; top:5%; left:5%; width:90%; height:90%; z-index:100; box-shadow: 0 0 50px rgba(0,243,255,0.1); overflow-y: auto; padding:30px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(0,243,255,0.3); padding-bottom:15px;">
+            <h2 style="color: var(--neon-cyan); margin:0;">📄 INCIDENT REPORT #<span id="rpt-id">001</span></h2>
+            <button class="cyber-btn" onclick="closeReport()" style="padding: 5px 15px; font-size:0.7rem;">CLOSE [X]</button>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="display: flex; gap: 20px; height: 250px;">
+                <div style="flex: 1; border: 1px solid rgba(255,255,255,0.1); padding: 10px; background:rgba(0,0,0,0.5); border-radius:5px;">
+                    <h4 style="color: var(--neon-green); margin: 0 0 10px 0; font-size:0.8rem;">ENTROPY TIMELINE</h4>
+                    <canvas id="entropyChart"></canvas>
+                </div>
+                <div style="flex: 1; border: 1px solid rgba(255,255,255,0.1); padding: 10px; background:rgba(0,0,0,0.5); border-radius:5px;">
+                    <h4 style="color: var(--neon-red); margin: 0 0 10px 0; font-size:0.8rem;">I/O SPIKE DETECTOR</h4>
+                    <canvas id="ioChart"></canvas>
+                </div>
+            </div>
+            <div id="report-content" style="flex: 1; border: 1px solid var(--neon-cyan); padding: 20px; font-family: var(--font-mono); font-size: 0.9rem; color: #ccc; line-height: 1.6; background: rgba(0, 20, 20, 0.8); border-radius:5px;">
+                > INITIALIZING UPLINK...<br>> WAITING FOR DATA...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let previousStatus = "SECURE";
+        let entropyChartInstance = null;
+        let ioChartInstance = null;
+
+        function updateStatus() {
+            fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                // Update Text & Bars
+                document.getElementById('io-rate').innerText = data.rate;
+                document.getElementById('io-bar').style.width = Math.min(data.rate, 100) + "%";
+                if(data.rate > 50) document.getElementById('io-bar').style.backgroundColor = "var(--neon-red)";
+                else document.getElementById('io-bar').style.backgroundColor = "var(--neon-cyan)";
+                
+                document.getElementById('entropy-val').innerText = data.entropy.toFixed(2);
+                document.getElementById('ent-bar').style.width = (data.entropy * 10) + "%";
+                
+                document.getElementById('ai-conf').innerText = data.ai_conf + "%";
+                document.getElementById('ai-bar').style.width = data.ai_conf + "%";
+
+                document.getElementById('status-text').innerText = data.status;
+                document.getElementById('sub-status').innerText = data.message;
+
+                // --- UPDATE THREAT ORIGIN ---
+                const pathLabel = document.getElementById('malware-path');
+                const pidLabel = document.getElementById('malware-pid');
+                const reasonLabel = document.getElementById('ai-reason');
+
+                const safePath = data.malware_path || "SYSTEM CLEAN"; 
+                const safePid = data.malware_pid || "PID: ---";
+                const safeReason = data.ai_reason || "NEURAL NET STANDBY";
+
+                if (data.status === "DANGER") {
+                    pathLabel.innerText = safePath; 
+                    pidLabel.innerText = safePid;
+                    reasonLabel.innerText = safeReason;
+                    
+                    pathLabel.style.color = "var(--neon-red)";
+                    pidLabel.style.color = "var(--neon-red)";
+                    pidLabel.style.fontWeight = "bold";
+                    reasonLabel.style.color = "var(--neon-cyan)";
+                } else {
+                    pathLabel.innerText = "SYSTEM CLEAN";
+                    pidLabel.innerText = "PID: ---";
+                    reasonLabel.innerText = "NEURAL NET STANDBY";
+                    
+                    pathLabel.style.color = "#fff";
+                    pidLabel.style.color = "var(--neon-green)";
+                    reasonLabel.style.color = "#666";
+                }
+
+                // Update Scoring Logic
+                document.getElementById('score-heuristics').innerText = data.ai_score_breakdown.heuristics;
+                document.getElementById('score-entropy').innerText = data.ai_score_breakdown.entropy;
+                document.getElementById('score-behavior').innerText = data.ai_score_breakdown.behavior;
+
+                // Visual State Changes
+                const ring = document.getElementById('status-ring');
+                const killBtn = document.getElementById('eliminate-btn');
+
+                if (data.status === "DANGER") {
+                    ring.className = "status-ring danger";
+                    killBtn.style.display = "inline-block"; 
+                    previousStatus = "DANGER";
+                } else if (data.status === "WARNING") {
+                    ring.className = "status-ring warning";
+                    previousStatus = "WARNING";
+                } else {
+                    ring.className = "status-ring secure";
+                    previousStatus = "SECURE";
+                }
+
+                window.lastGraphData = {
+                    entropy: data.graph_entropy,
+                    io: data.graph_io
+                };
+            });
+        }
+
+        function eliminateThreat() {
+            const btn = document.getElementById('eliminate-btn');
+            btn.disabled = true;
+            btn.innerText = "PURGING...";
+            
+            fetch('/api/eliminate', { method: 'POST' })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('eliminate-btn').style.display = 'none';
+                document.getElementById('report-btn').style.display = "inline-block";
+            });
+        }
+
+        function generateReport() {
+            document.getElementById('report-modal').style.display = "block";
+            const reportDiv = document.getElementById('report-content');
+            reportDiv.innerHTML = "> ESTABLISHING UPLINK WITH GROQ NEURAL NET...";
+            renderGraphs();
+            fetch('/api/report')
+            .then(res => res.json())
+            .then(data => {
+                reportDiv.innerHTML = data.report;
+            });
+        }
+
+        function renderGraphs() {
+            const data = window.lastGraphData;
+            const labels = Array.from({length: 60}, (_, i) => i);
+            const commonOptions = {
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } }, 
+                scales: { 
+                    x: { display: false }, 
+                    y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888' } } 
+                } 
+            };
+
+            if (entropyChartInstance) entropyChartInstance.destroy();
+            if (ioChartInstance) ioChartInstance.destroy();
+
+            const ctxEnt = document.getElementById('entropyChart').getContext('2d');
+            entropyChartInstance = new Chart(ctxEnt, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data.entropy,
+                        borderColor: '#00ff41',
+                        backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }]
+                },
+                options: { ...commonOptions, scales: { ...commonOptions.scales, y: { max: 9, min: 0 } } }
+            });
+
+            const ctxIO = document.getElementById('ioChart').getContext('2d');
+            ioChartInstance = new Chart(ctxIO, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data.io,
+                        borderColor: '#ff2a2a',
+                        backgroundColor: 'rgba(255, 42, 42, 0.1)',
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 0
+                    }]
+                },
+                options: commonOptions
+            });
+        }
+
+        function closeReport() {
+            document.getElementById('report-modal').style.display = "none";
+        }
+
+        function resetSystem() {
+            fetch('/api/reset', { method: 'POST' })
+            .then(() => {
+                previousStatus = "SECURE";
+                document.getElementById('report-btn').style.display = "none";
+                const killBtn = document.getElementById('eliminate-btn');
+                killBtn.disabled = false;
+                killBtn.innerText = "☠️ ELIMINATE THREAT";
+                killBtn.style.display = "none";
+                alert("SYSTEM RESET COMPLETE. MONITORING ACTIVE.");
+            });
+        }
+
+        setInterval(updateStatus, 1000);
+    </script>
+</body>
+</html>

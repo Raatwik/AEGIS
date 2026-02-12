@@ -1,0 +1,299 @@
+/* --- GLOBAL VARIABLES & RESET --- */
+:root {
+    --bg-dark: #050505;
+    --panel-bg: rgba(20, 20, 20, 0.6);
+    --panel-border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Neon Accents */
+    --neon-green: #00ff41;
+    --neon-red: #ff2a2a;
+    --neon-cyan: #00f3ff;
+    --neon-orange: #ff9e00;
+    
+    /* Fonts */
+    --font-head: 'Inter', sans-serif;
+    --font-mono: 'Fira Code', 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--bg-dark);
+    color: #e0e0e0;
+    font-family: var(--font-head);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+}
+
+/* --- LAYOUT CONTAINER --- */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 95vh; 
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 2;
+    padding: 10px; 
+    
+    /* Hide scrollbar */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+.container::-webkit-scrollbar { display: none; }
+
+/* --- HEADER --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0; 
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+.status-text {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* --- MAIN STATUS ORB (UPDATED FOR TEXT FIT) --- */
+.status-container {
+    flex-shrink: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 20px 0;
+}
+
+.status-ring {
+    /* Increased size slightly to 280px */
+    width: 280px; 
+    height: 280px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    transition: all 0.5s ease;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    /* Added padding to prevent text touching edges */
+    padding: 20px;
+    text-align: center;
+}
+
+/* Animated Pulse Ring */
+.status-ring::before {
+    content: '';
+    position: absolute;
+    top: -10px; left: -10px; right: -10px; bottom: -10px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-bottom-color: currentColor;
+    animation: spin 4s linear infinite;
+    opacity: 0.5;
+}
+
+/* STATE: SECURE */
+.status-ring.secure {
+    color: var(--neon-green);
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+    border-color: rgba(0, 255, 65, 0.2);
+}
+
+/* STATE: WARNING */
+.status-ring.warning {
+    color: var(--neon-orange);
+    box-shadow: 0 0 40px rgba(255, 158, 0, 0.2);
+    border-color: var(--neon-orange);
+    animation: pulse-orange 1s infinite alternate;
+}
+
+/* STATE: DANGER (Red Alert) */
+.status-ring.danger {
+    color: var(--neon-red);
+    box-shadow: 0 0 60px rgba(255, 42, 42, 0.4), inset 0 0 20px rgba(255, 42, 42, 0.2);
+    border-color: var(--neon-red);
+    animation: shake 0.5s ease-in-out infinite, pulse-red 0.8s infinite;
+}
+
+.status-ring h1 {
+    /* Reduced font size to fit inside circle */
+    font-size: 2.2rem; 
+    margin: 0;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px currentColor;
+    line-height: 1.1;
+    max-width: 100%;
+}
+
+.status-ring p {
+    font-family: var(--font-mono);
+    /* Smaller font for sub-text */
+    font-size: 0.75rem; 
+    margin-top: 10px;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    text-transform: uppercase;
+    /* Ensure it wraps if too long */
+    white-space: normal;
+    max-width: 90%;
+}
+
+/* --- METRICS GRID --- */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    flex-shrink: 0;
+}
+
+.metric-card {
+    background: var(--panel-bg);
+    border: var(--panel-border);
+    padding: 20px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.metric-card h3 {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #666;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.metric-card .number {
+    font-size: 2rem;
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+.bar-bg {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 15px;
+    border-radius: 2px;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--neon-cyan);
+    width: 0%;
+    transition: width 0.3s ease, background 0.3s;
+    box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* --- SCORE PANEL --- */
+.score-panel {
+    background: var(--panel-bg);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    flex-shrink: 0;
+}
+
+.score-value {
+    transition: color 0.3s ease;
+}
+
+/* --- BUTTONS --- */
+.actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px 0;
+    flex-shrink: 0; 
+}
+
+.cyber-btn {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 12px 30px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.cyber-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Danger Button Permanent Glow */
+.cyber-btn.danger-btn {
+    border-color: var(--neon-red);
+    color: var(--neon-red);
+    box-shadow: 0 0 15px rgba(255, 42, 42, 0.3); 
+}
+.cyber-btn.danger-btn:hover {
+    background: var(--neon-red);
+    color: #000;
+    box-shadow: 0 0 30px var(--neon-red);
+}
+
+/* Report Button Permanent Glow */
+.cyber-btn.report-btn {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); 
+}
+.cyber-btn.report-btn:hover {
+    background: var(--neon-cyan);
+    color: #000;
+    box-shadow: 0 0 30px var(--neon-cyan);
+}
+
+/* --- MODAL --- */
+.modal {
+    background: rgba(10, 10, 10, 0.95) !important;
+    border: 1px solid var(--neon-cyan) !important;
+    border-radius: 10px;
+    backdrop-filter: blur(20px);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes pulse-red { 0% { box-shadow: 0 0 20px var(--neon-red); } 100% { box-shadow: 0 0 50px var(--neon-red); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+
+/* SCANLINES OVERLAY */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    z-index: 10;
+}
