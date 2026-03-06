@@ -51,7 +51,7 @@ If the entropy value H(X) spikes above 7.9, Aegis triggers an instant lockdown.
 
 
 ## Contributors
-Sasmit(https://github.com/sasmit-1) - Lead Backend
-Raatwik(https://github.com/Raatwik) - PID Implementation
-Mahi(https://github.com/daiyu5676) - Research & Hueristics + Presentation
-Ekaksh(https://github.com/Ekaksh1) - Research & Heuristics + Presentation
+-Sasmit(https://github.com/sasmit-1) - Lead Backend
+-Raatwik(https://github.com/Raatwik) - PID Implementation
+-Mahi(https://github.com/daiyu5676) - Research & Hueristics + Presentation
+-Ekaksh(https://github.com/Ekaksh1) - Research & Heuristics + Presentation
