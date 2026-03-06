@@ -3,7 +3,7 @@ import json
 from groq import Groq
 
 # --- CONFIGURATION ---
-API_KEY = "insert groq API key" #
+API_KEY = "{GROQ API KEY HERE}" #
 
 def generate_forensic_report(stats):
     """

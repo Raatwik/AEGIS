@@ -4,7 +4,7 @@ import os
 from groq import Groq
 
 # --- CONFIGURATION ---
-API_KEY = "INsert Groq API key"  # <--- PASTE YOUR KEY HERE
+API_KEY = "{GROQ API KEY HERE}"  # <--- PASTE YOUR KEY HERE
 
 def hunt_for_threat():
     """

@@ -16,6 +16,12 @@ venv/
 .DS_Store
 Thumbs.db
 
-# IDE settings (Optional)
-.vscode/
-.idea/
+# Aegis Simulation Artifacts
+SafeZone/          # The active "victim" folder
+.AegisVault/       # The shadow backup created by ShadowVault
+malware.pid        # The PID tracker for the simulated attacker
+*.log              # Any text logs generated during the attack
+
+# Project Configuration
+.vscode/           # If you use VS Code (local settings)
+.idea/             # If you use PyCharm
