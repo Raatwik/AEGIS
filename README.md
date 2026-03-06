@@ -1,122 +1,57 @@
-🛡️ Aegis Ransomware Defense System
-Autonomous. Intelligent. Instant. An advanced endpoint protection platform that detects, neutralizes, and reverses ransomware attacks in real-time using entropy analysis and Generative AI forensics.
+# Aegis: AI-Powered Ransomware Defense System
+**3rd Place Winner @Code Craft Chase 2.0 2026**
 
-🚨 The Problem
-Traditional antivirus relies on "signatures" (knowing what a virus looks like). Modern ransomware is polymorphic—it changes every time. Aegis is different. It ignores signatures and analyzes behavior (mathematics).
+Aegis is an autonomous Endpoint Detection and Response (EDR) platform. It bypasses traditional signature-based antivirus by using behavioral mathematics and Generative AI to detect, neutralize, and reverse ransomware attacks in real-time.
 
-⚡ Key Features
-1. Multi-Vector Detection Engine
-🍯 Honeypot Traps: Decoy system files (config.sys) that trigger an instant lockdown if touched.
+## Core Detection Mechanisms
 
-Virology Math (Shannon Entropy): Detects the mathematical "noise" of encryption. If a text file's entropy spikes > 7.9, it's being encrypted.
+* **Shannon Entropy Analysis:** Calculates file randomness to detect mass-encryption. Plaintext has low entropy, while encrypted data approaches the maximum limit of 8.0. 
 
-🛑 Header Integrity Check: Detects "Zero-Day" wipers that corrupt file headers (Magic Bytes) without full encryption.
+$$H(X) = -\sum_{i=1}^{n} P(x_i) \log_2 P(x_i)$$
 
-2. Active Defense (The "Kill Switch")
-Network Air-Gap: Physically disables the Wi-Fi adapter via netsh to prevent data exfiltration (stealing keys).
+If the entropy value H(X) spikes above 7.9, Aegis triggers an instant lockdown.
+* **Honeypot Traps:** Decoy system files (e.g., `config.sys`). Any interaction by a non-system process triggers a 100% confidence alert.
+* **Header Integrity Checks:** Detects "Zero-Day" wipers that corrupt file headers (Magic Bytes) to render data unrecoverable without triggering standard encryption alerts.
 
-Assassin Module: Identifies the malicious process ID (PID) and terminates it instantly.
+## Automated Response & Recovery
 
-3. "Time Travel" Recovery
-Shadow Vault: Maintains a hidden, real-time backup of the protected directory.
+* **Network Air-Gap:** Physically severs network adapters via `netsh` to halt data exfiltration.
+* **Assassin Module:** Identifies the malicious Process ID (PID) via `psutil` and terminates it instantly.
+* **Shadow Vault:** Maintains a hidden, real-time backup for instant file restoration.
+* **AI Forensics:** Uses the Groq Cloud API (Llama 3.1) to generate automated incident reports mapped to MITRE ATT&CK frameworks.
 
-Instant Rollback: One-click restoration wipes the infection and restores files to their pre-attack state.
+## Tech Stack
 
-4. Generative AI Forensics (Powered by Groq)
-Automated Reporting: Generates a professional "CISO-Level" incident report in seconds.
+* **Backend / Telemetry:** Python 3, Flask, `psutil`, `watchdog`
+* **AI Engine:** Groq Cloud API (Llama 3.1 8b)
+* **Frontend:** Vanilla JavaScript, HTML/CSS, Chart.js
 
-MITRE ATT&CK Mapping: Automatically maps the attack vector to industry standards:
+## Installation & Setup
 
-T1059: Command Execution (Honeypot Trigger)
+**Prerequisites:** Windows OS (Admin privileges required), Python 3.x, Groq API Key.
 
-T1486: Data Encrypted for Impact (High Entropy)
+1. Clone the repository and install dependencies:
+    ```bash
+    git clone [https://github.com/Raatwik/AEGIS.git](https://github.com/Raatwik/AEGIS.git)
+    cd AEGIS
+    pip install -r requirements.txt
+    ```
 
-T1027: Obfuscated Files (Header Mismatch)
+2. Create a `.env` file in the root directory and add your API key:
+    ```text
+    GROQ_API_KEY=your_actual_key_here
+    ```
 
-🛠️ Architecture
-Sensor (Watchdog): Monitors file system I/O events in real-time.
+## Usage
 
-Brain (Heuristic Engine): Calculates entropy and checks file headers against known safe types.
+1. **Start Aegis:** Run `python app.py` as Administrator.
+2. **Access Dashboard:** Open `http://127.0.0.1:5000` in your web browser.
+3. **Launch Attack:** Open a new terminal and run `python simulate_attack.py`. Select an attack vector.
+4. **Observe & Remediate:** Watch the dashboard detect the threat, sever the network, and allow you to restore the files.
 
-Reflex (Assassin): Executes the kill command and network severing.
 
-Analyst (Groq AI): Ingests attack logs and produces the forensic report.
-
-🚀 Installation & Setup
-Prerequisites
-Python 3.x
-
-Windows OS (Required for netsh network commands)
-
-Administrator Privileges (to control network adapters)
-
-1. Clone the Repository
-Bash
-git clone https://github.com/yourusername/Aegis-Ransomware-Defense.git
-cd Aegis-Ransomware-Defense
-2. Install Dependencies
-Bash
-pip install flask watchdog groq
-3. Configure API Key
-Open core/reporter.py and add your Groq API key (free at console.groq.com):
-
-Python
-# core/reporter.py
-API_KEY = "gsk_..."
-🎮 Usage (The Demo)
-Step 1: Start the Aegis Brain
-Run the main application. Must be run as Administrator to allow network severing.
-
-Bash
-python app.py
-Open your browser to: http://127.0.0.1:5000
-
-Status should be GREEN (SECURE).
-
-Step 2: Launch the Attack Simulator
-Open a second terminal and run the simulator tool.
-
-Bash
-python simulate_attack.py
-Step 3: Choose Your Attack
-Select an option from the menu:
-
-Option 2 (Ransomware): Triggers Honeypot & Encryption.
-
-Option 3 (Stealth): Triggers Entropy Detection (Math-based).
-
-Option 4 (Zero-Day): Triggers Header Corruption.
-
-Step 4: Watch the Defense
-Dashboard turns RED: "Network Severed."
-
-Click "ELIMINATE THREAT & RESTORE".
-
-Click "GENERATE AI FORENSIC REPORT" to see the analysis.
-
-📸 Screenshots
-The Secure Dashboard
-(Place your image_5a911f.png here)
-
-The "Red Screen" (Attack Detected)
-(Place your image_e0737f.png here)
-
-AI Forensic Report (MITRE Analysis)
-(Place your image_59c360.jpg here)
-
-📂 Project Structure
-Plaintext
-Aegis/
-├── SafeZone/            # The folder being protected
-├── core/
-│   ├── network_kill.py  # Wi-Fi & Process termination logic
-│   ├── recovery.py      # Shadow Vault backup system
-│   └── reporter.py      # Groq AI integration
-├── sensor/
-│   ├── ai_brain.py      # Entropy & Header math logic
-│   └── monitor.py       # File system watchdog
-├── ui/                  # HTML/CSS Dashboard
-├── app.py               # Main Flask Server
-└── simulate_attack.py   # Malware Simulator
-⚠️ Disclaimer
-This software is for educational purposes only. The "Simulator" creates files that look encrypted but uses reversible XOR logic. Do not use the defense modules on critical production systems without testing, as the "Kill Switch" effectively disables internet access.
+## Contributors
+Sasmit(https://github.com/sasmit-1) - Lead Backend
+Raatwik(https://github.com/Raatwik) - PID Implementation
+Mahi(https://github.com/daiyu5676) - Research & Hueristics + Presentation
+Ekaksh(https://github.com/Ekaksh1) - Research & Heuristics + Presentation
